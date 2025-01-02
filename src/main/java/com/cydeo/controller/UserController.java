@@ -50,7 +50,7 @@ public class UserController {
 
         userService.update(username, user);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseWrapper("Successfully updated user", 202));
+        return ResponseEntity.ok((new ResponseWrapper("Successfully updated user", 200)));
 
     }
 
