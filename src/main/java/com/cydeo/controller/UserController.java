@@ -50,8 +50,13 @@ public class UserController {
 
         userService.update(username, user);
 
-        return ResponseEntity.ok((new ResponseWrapper("Successfully updated user", 200)));
+        return ResponseEntity.ok((new ResponseWrapper("Successfully updated user")));
 
     }
+    @DeleteMapping("/{username}")
+    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable String username){
 
+        userService.delete(username);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully deleted user"));
+    }
 }
