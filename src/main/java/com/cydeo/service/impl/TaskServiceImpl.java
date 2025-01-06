@@ -79,13 +79,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String taskCode) {
 
-       Optional<Task> foundTask = taskRepository.findById(id);
+       Task foundTask = taskRepository.findByTaskCode(taskCode);
 
-       if (foundTask.isPresent()){
-           foundTask.get().setIsDeleted(true);
-           taskRepository.save(foundTask.get());
+       if (foundTask!=null){
+           foundTask.setIsDeleted(true);
+           taskRepository.save(foundTask);
        }
 
     }
@@ -107,7 +107,7 @@ public class TaskServiceImpl implements TaskService {
 
        List<Task> tasksToDelete = taskRepository.findAllByProject(mapperUtil.convert(project, Project.class));
 
-       tasksToDelete.forEach(task -> delete(task.getId()));
+       tasksToDelete.forEach(task -> delete(task.getTaskCode()));
     }
 
     @Override

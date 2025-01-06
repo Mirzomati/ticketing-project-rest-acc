@@ -2,6 +2,7 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.ResponseWrapper;
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.enums.Status;
 import com.cydeo.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,39 @@ public class TaskController {
         taskService.update(taskCode,taskDTO);
 
         return ResponseEntity.ok(new ResponseWrapper("Task was successfully updated"));
+    }
+    @DeleteMapping("/{taskCode}")
+    public ResponseEntity<ResponseWrapper> deleteTask(@PathVariable String taskCode) {
+
+        taskService.delete(taskCode);
+
+        return ResponseEntity.ok(new ResponseWrapper("Task was successfully deleted"));
+    }
+
+    @GetMapping("/employee/pending-tasks")
+    public ResponseEntity<ResponseWrapper> employeePendingTasks() {
+
+        List<TaskDTO> taskDTOList = taskService.listAllTasksByStatusIsNot(Status.COMPLETE);
+
+        return ResponseEntity.ok(new ResponseWrapper("Tasks are successfully retrieved", taskDTOList));
+
+    }
+    @GetMapping("/employee/archive")
+    public ResponseEntity<ResponseWrapper> employeeArchiveTasks() {
+
+        List<TaskDTO> taskDTOList = taskService.listAllTasksByStatus(Status.COMPLETE);
+
+        return ResponseEntity.ok(new ResponseWrapper("Tasks are successfully retrieved", taskDTOList));
+
+    }
+
+    @GetMapping("/employee/update/{taskCode}")
+    public ResponseEntity<ResponseWrapper> employeeUpdateTask(@PathVariable String taskCode, @RequestBody TaskDTO taskDTO) {
+
+        taskService.update(taskCode,taskDTO);
+
+        return ResponseEntity.ok(new ResponseWrapper("Task was successfully updated"));
+
     }
 
 
