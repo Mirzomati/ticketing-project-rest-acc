@@ -75,7 +75,7 @@ public class TaskController {
 
     }
 
-    @GetMapping("/employee/update/{taskCode}")
+    @PutMapping("/employee/update/{taskCode}")
     public ResponseEntity<ResponseWrapper> employeeUpdateTask(@PathVariable String taskCode, @RequestBody TaskDTO taskDTO) {
 
         taskService.update(taskCode,taskDTO);
