@@ -68,6 +68,8 @@ public class ProjectServiceImpl implements ProjectService {
 
         convertedProject.setProjectStatus(foundProject.getProjectStatus());
 
+        convertedProject.setProjectCode(projectCode);
+
         projectRepository.save(convertedProject);
 
     }

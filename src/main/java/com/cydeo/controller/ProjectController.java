@@ -53,4 +53,18 @@ public class ProjectController {
         projectService.delete(projectCode);
         return ResponseEntity.ok(new ResponseWrapper("Project was successfully deleted"));
     }
+    @GetMapping("/manager/project-status")
+    public ResponseEntity<ResponseWrapper> getProjectByManager() {
+
+        List<ProjectDTO> projectDTOList = projectService.listAllProjectDetails();
+
+        return ResponseEntity.ok(new ResponseWrapper("Projects are successfully retrieved", projectDTOList));
+    }
+    @PutMapping("/manager/complete/{projectCode}")
+    public ResponseEntity<ResponseWrapper> managerCompleteProject(@PathVariable String projectCode) {
+
+        projectService.complete(projectCode);
+
+        return ResponseEntity.ok(new ResponseWrapper("Project was successfully completed"));
+    }
 }
