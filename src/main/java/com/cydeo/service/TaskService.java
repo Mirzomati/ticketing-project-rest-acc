@@ -15,7 +15,7 @@ public interface TaskService {
 
     void save(TaskDTO task);
 
-    void update(TaskDTO task);
+    void update(String taskCode, TaskDTO task);
 
     void delete(Long id);
 

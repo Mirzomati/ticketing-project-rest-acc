@@ -3,11 +3,9 @@ package com.cydeo.controller;
 import com.cydeo.dto.ResponseWrapper;
 import com.cydeo.dto.TaskDTO;
 import com.cydeo.service.TaskService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +33,24 @@ public class TaskController {
 
         return ResponseEntity.ok(new ResponseWrapper("Task is successfully retrieved", taskDTO));
     }
+
+    @PostMapping
+    public ResponseEntity<ResponseWrapper> createTask(@RequestBody TaskDTO taskDTO) {
+
+        taskService.save(taskDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper("Task was successfully created", 201));
+    }
+
+    @PutMapping("/{taskCode}")
+    public ResponseEntity<ResponseWrapper> updateTask(@PathVariable String taskCode, @RequestBody TaskDTO taskDTO) {
+
+        taskService.update(taskCode,taskDTO);
+
+        return ResponseEntity.ok(new ResponseWrapper("Task was successfully updated"));
+    }
+
+
 
 
 
