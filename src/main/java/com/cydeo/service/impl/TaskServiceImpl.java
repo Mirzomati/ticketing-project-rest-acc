@@ -152,4 +152,12 @@ public class TaskServiceImpl implements TaskService {
 
         return tasks.stream().map(task -> mapperUtil.convert(task, TaskDTO.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public TaskDTO findByTaskCode(String taskCode) {
+
+        Task task = taskRepository.findByTaskCode(taskCode);
+
+        return mapperUtil.convert(task, TaskDTO.class);
+    }
 }

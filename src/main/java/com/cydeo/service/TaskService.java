@@ -32,4 +32,6 @@ public interface TaskService {
     List<TaskDTO> listAllTasksByStatus(Status status);
 
     List<TaskDTO> listAllNonCompletedByAssignedEmployee(UserDTO employee);
+
+    TaskDTO findByTaskCode(String taskCode);
 }
