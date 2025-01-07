@@ -9,6 +9,7 @@ import com.cydeo.entity.User;
 import com.cydeo.enums.Status;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.TaskRepository;
+import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,13 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final MapperUtil mapperUtil;
     private final UserService userService;
+    private final ProjectService projectService;
 
-    public TaskServiceImpl(TaskRepository taskRepository, MapperUtil mapperUtil, UserService userService) {
+    public TaskServiceImpl(TaskRepository taskRepository, MapperUtil mapperUtil, UserService userService, ProjectService projectService) {
         this.taskRepository = taskRepository;
         this.mapperUtil = mapperUtil;
         this.userService = userService;
+        this.projectService = projectService;
     }
 
     @Override
@@ -53,6 +56,8 @@ public class TaskServiceImpl implements TaskService {
 
         task.setAssignedDate(LocalDate.now());
         task.setTaskStatus(Status.OPEN);
+        task.setAssignedEmployee(userService.findByUserName(task.getAssignedEmployee().getUserName()));
+        task.setProject(projectService.getByProjectCode(task.getProject().getProjectCode()));
 
         Task convertedTask = mapperUtil.convert(task, Task.class);
 
@@ -73,6 +78,9 @@ public class TaskServiceImpl implements TaskService {
             convertedTask.setTaskStatus(task.getTaskStatus() == null ? foundTask.getTaskStatus() : task.getTaskStatus());
             convertedTask.setTaskCode(taskCode);
             convertedTask.setId(foundTask.getId());
+            convertedTask.setAssignedEmployee(mapperUtil.convert(userService.findByUserName(task.getAssignedEmployee().getUserName()), User.class));
+            convertedTask.setProject(mapperUtil.convert(projectService.getByProjectCode(task.getProject().getProjectCode()), Project.class));
+
             taskRepository.save(convertedTask);
 
         }
@@ -84,6 +92,7 @@ public class TaskServiceImpl implements TaskService {
        Task foundTask = taskRepository.findByTaskCode(taskCode);
 
        if (foundTask!=null){
+
            foundTask.setIsDeleted(true);
            taskRepository.save(foundTask);
        }

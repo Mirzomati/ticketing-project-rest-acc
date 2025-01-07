@@ -3,6 +3,7 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.TaskDTO;
 import com.cydeo.dto.UserDTO;
+import com.cydeo.entity.Role;
 import com.cydeo.entity.User;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.UserRepository;
@@ -22,12 +23,14 @@ public class UserServiceImpl implements UserService {
     private final MapperUtil mapperUtil;
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final RoleServiceImpl roleService;
 
-    public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil, @Lazy ProjectService projectService,@Lazy TaskService taskService) {
+    public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil, @Lazy ProjectService projectService, @Lazy TaskService taskService, RoleServiceImpl roleService) {
         this.userRepository = userRepository;
         this.mapperUtil = mapperUtil;
         this.projectService = projectService;
         this.taskService = taskService;
+        this.roleService = roleService;
     }
 
     @Override
@@ -49,6 +52,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(UserDTO user) {
 
+        user.setRole(roleService.findByDescription(user.getRole().getDescription()));
+
         userRepository.save(mapperUtil.convert(user, User.class));
     }
 
@@ -58,8 +63,9 @@ public class UserServiceImpl implements UserService {
         User foundUser = userRepository.findByUserNameAndIsDeleted(username, false);
 
         User updatedUser = mapperUtil.convert(user, User.class);
-
         updatedUser.setId(foundUser.getId());
+        updatedUser.setUserName(username);
+        updatedUser.setRole(mapperUtil.convert(roleService.findByDescription(user.getRole().getDescription()), Role.class));
 
         userRepository.save(updatedUser);
     }
