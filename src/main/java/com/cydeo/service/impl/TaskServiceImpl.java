@@ -12,6 +12,7 @@ import com.cydeo.repository.TaskRepository;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
     private final UserService userService;
     private final ProjectService projectService;
 
-    public TaskServiceImpl(TaskRepository taskRepository, MapperUtil mapperUtil, UserService userService, ProjectService projectService) {
+    public TaskServiceImpl(TaskRepository taskRepository, MapperUtil mapperUtil, UserService userService,@Lazy ProjectService projectService) {
         this.taskRepository = taskRepository;
         this.mapperUtil = mapperUtil;
         this.userService = userService;
