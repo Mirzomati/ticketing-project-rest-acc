@@ -7,6 +7,7 @@ import com.cydeo.entity.User;
 import com.cydeo.enums.Status;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.ProjectRepository;
+import com.cydeo.service.KeycloakService;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
@@ -23,12 +24,14 @@ public class ProjectServiceImpl implements ProjectService {
     private final MapperUtil mapperUtil;
     private final UserService userService;
     private final TaskService taskService;
+    private final KeycloakService keycloakService;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, MapperUtil mapperUtil, UserService userService, TaskService taskService) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, MapperUtil mapperUtil, UserService userService, TaskService taskService, KeycloakService keycloakService) {
         this.projectRepository = projectRepository;
         this.mapperUtil = mapperUtil;
         this.userService = userService;
         this.taskService = taskService;
+        this.keycloakService = keycloakService;
     }
 
 
@@ -108,7 +111,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectDTO> listAllProjectDetails() {
 
-        UserDTO currentUser = userService.findByUserName("harold@manager.com");
+        UserDTO currentUser = userService.findByUserName(keycloakService.getLoggedInUserName());
 
         User user = mapperUtil.convert(currentUser, User.class);
 

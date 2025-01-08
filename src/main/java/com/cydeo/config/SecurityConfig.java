@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(jsr250Enabled = true)
+//@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     @Bean
@@ -24,12 +24,12 @@ public class SecurityConfig {
 
         return httpSecurity
                 .authorizeHttpRequests(httpRequests -> httpRequests
-                        .anyRequest().permitAll())
- //                       .requestMatchers("/api/v1/user/**").hasAuthority("Admin")
-//                        .requestMatchers("/api/v1/project/**").hasAuthority("Manager")
-//                        .requestMatchers("/api/v1/task/employee/**").hasAuthority("Employee")
-//                        .requestMatchers("/api/v1/task/**").hasAuthority("Manager")
-//                        .anyRequest().authenticated())
+//                        .anyRequest().permitAll())
+                        .requestMatchers("/api/v1/user/**").hasAuthority("Admin")
+                        .requestMatchers("/api/v1/project/**").hasAuthority("Manager")
+                        .requestMatchers("/api/v1/task/employee/**").hasAuthority("Employee")
+                        .requestMatchers("/api/v1/task/**").hasAuthority("Manager")
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwt -> {
 
                     Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
