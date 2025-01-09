@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService {
         updatedUser.setUserName(username);
         updatedUser.setRole(mapperUtil.convert(roleService.findByDescription(user.getRole().getDescription()), Role.class));
 
+        keycloakService.userUpdate( mapperUtil.convert(updatedUser, UserDTO.class));
         userRepository.save(updatedUser);
     }
 
@@ -85,6 +86,7 @@ public class UserServiceImpl implements UserService {
             user.setIsDeleted(true);
             user.setUserName(user.getUserName() + "-" + user.getId());
 
+            keycloakService.userDelete(username);
             userRepository.save(user);
         }
     }

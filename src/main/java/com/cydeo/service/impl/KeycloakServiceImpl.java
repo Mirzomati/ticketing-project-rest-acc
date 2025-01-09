@@ -78,6 +78,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     }
 
+
     @Override
     public void userUpdate(UserDTO userDTO) {
         try (Keycloak keycloak = getKeycloakInstance()) {
@@ -106,6 +107,21 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         }
 
+    }
+
+    @Override
+    public void userDelete(String userName) {
+
+        try (Keycloak keycloak = getKeycloakInstance()) {
+
+            RealmResource realmResource = keycloak.realm(keycloakProperties.getRealm());
+            UsersResource usersResource = realmResource.users();
+
+            List<UserRepresentation> userRepresentations = usersResource.search(userName);
+            String uid = userRepresentations.get(0).getId();
+            usersResource.delete(uid);
+
+        }
     }
 
     private void updatePassword(UsersResource usersResource, String userId, String newPassword) {

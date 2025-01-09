@@ -10,4 +10,6 @@ public interface KeycloakService {
 
     void userUpdate(UserDTO userDTO);
 
+    void userDelete(String userName);
+
 }
