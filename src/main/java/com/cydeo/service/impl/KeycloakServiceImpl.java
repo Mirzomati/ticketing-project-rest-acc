@@ -78,6 +78,67 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     }
 
+    @Override
+    public void userUpdate(UserDTO userDTO) {
+        try (Keycloak keycloak = getKeycloakInstance()) {
+
+            RealmResource realmResource = keycloak.realm(keycloakProperties.getRealm());
+            UsersResource usersResource = realmResource.users();
+
+            List<UserRepresentation> userRepresentations = usersResource.search(userDTO.getUserName());
+
+            if (userRepresentations.isEmpty()) {
+                throw new RuntimeException("User does not exist.");
+            }
+
+            UserRepresentation keycloakUser = userRepresentations.get(0);
+
+            updateRoles(realmResource, keycloakUser.getId(), userDTO.getRole().getDescription());
+
+            keycloakUser.setFirstName(userDTO.getFirstName());
+            keycloakUser.setLastName(userDTO.getLastName());
+
+            if (userDTO.getPassWord() != null && !userDTO.getPassWord().isEmpty()) {
+                updatePassword(usersResource, keycloakUser.getId(), userDTO.getPassWord());
+            }
+
+            usersResource.get(keycloakUser.getId()).update(keycloakUser);
+
+        }
+
+    }
+
+    private void updatePassword(UsersResource usersResource, String userId, String newPassword) {
+
+        CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setType(CredentialRepresentation.PASSWORD);
+        credential.setTemporary(false);
+        credential.setValue(newPassword);
+    }
+
+    private void updateRoles(RealmResource realmResource, String userId, String role) {
+
+        ClientRepresentation appClient = realmResource.clients()
+                .findByClientId(keycloakProperties.getClientId()).get(0);
+
+        String clientId = appClient.getId();
+
+        List<RoleRepresentation> existingRoles = realmResource.users().get(userId)
+                .roles().clientLevel(clientId).listEffective();
+
+        existingRoles.forEach(existingRole ->
+                realmResource.users().get(userId)
+                        .roles().clientLevel(clientId).remove(List.of(existingRole)));
+
+        RoleRepresentation userClientRole = realmResource.clients().get(clientId)
+                .roles().get(role).toRepresentation();
+
+        realmResource.users().get(userId).roles().clientLevel(clientId)
+                .add(List.of(userClientRole));
+    }
+
+
+
     private Keycloak getKeycloakInstance() {
 
         return Keycloak.getInstance(

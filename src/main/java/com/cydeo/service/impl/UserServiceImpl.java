@@ -7,6 +7,7 @@ import com.cydeo.entity.Role;
 import com.cydeo.entity.User;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.KeycloakService;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
@@ -24,13 +25,15 @@ public class UserServiceImpl implements UserService {
     private final ProjectService projectService;
     private final TaskService taskService;
     private final RoleServiceImpl roleService;
+    private final KeycloakService keycloakService;
 
-    public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil, @Lazy ProjectService projectService, @Lazy TaskService taskService, RoleServiceImpl roleService) {
+    public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil, @Lazy ProjectService projectService, @Lazy TaskService taskService, RoleServiceImpl roleService, KeycloakService keycloakService) {
         this.userRepository = userRepository;
         this.mapperUtil = mapperUtil;
         this.projectService = projectService;
         this.taskService = taskService;
         this.roleService = roleService;
+        this.keycloakService = keycloakService;
     }
 
     @Override
@@ -54,6 +57,7 @@ public class UserServiceImpl implements UserService {
 
         user.setRole(roleService.findByDescription(user.getRole().getDescription()));
 
+        keycloakService.userCreate(user);
         userRepository.save(mapperUtil.convert(user, User.class));
     }
 
