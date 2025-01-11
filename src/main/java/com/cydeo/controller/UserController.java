@@ -3,6 +3,12 @@ package com.cydeo.controller;
 import com.cydeo.dto.ResponseWrapper;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
+@Tag(name = "User Controller", description = "User APIs")
 public class UserController {
 
     private final UserService userService;
@@ -20,6 +27,14 @@ public class UserController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all users")
+    @Tag(name = "User Get Methods")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users are successfully retrieved",
+            content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "409", description = "Users could not be retrieved",
+                    content = @Content(mediaType = "application/json"))
+    })
     public ResponseEntity<ResponseWrapper> getAllUsers(){
 
         List<UserDTO> userDTOList = userService.listAllUsers();
@@ -29,6 +44,8 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
+    @Operation(summary = "Get user by username")
+    @Tag(name = "User Get Methods")
     public ResponseEntity<ResponseWrapper> getUserByUsername(@PathVariable String username){
 
         UserDTO userDTO = userService.findByUserName(username);
@@ -38,6 +55,7 @@ public class UserController {
     }
 
     @PostMapping
+    @Operation(summary = "Create user")
     public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDTO user){
 
         userService.save(user);
@@ -46,6 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
+    @Operation(summary = "Update user")
     public ResponseEntity<ResponseWrapper> updateUser(@PathVariable String username, @RequestBody UserDTO user){
 
         userService.update(username, user);
@@ -54,6 +73,7 @@ public class UserController {
 
     }
     @DeleteMapping("/{username}")
+    @Operation(summary = "Delete user")
     public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable String username){
 
         userService.delete(username);
