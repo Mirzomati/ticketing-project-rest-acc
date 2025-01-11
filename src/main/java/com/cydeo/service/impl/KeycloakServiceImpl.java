@@ -2,6 +2,7 @@ package com.cydeo.service.impl;
 
 import com.cydeo.config.KeycloakProperties;
 import com.cydeo.dto.UserDTO;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.service.KeycloakService;
 import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
@@ -89,7 +90,7 @@ public class KeycloakServiceImpl implements KeycloakService {
             List<UserRepresentation> userRepresentations = usersResource.search(userDTO.getUserName());
 
             if (userRepresentations.isEmpty()) {
-                throw new RuntimeException("User does not exist.");
+                throw new UserNotFoundException("User does not exist.");
             }
 
             UserRepresentation keycloakUser = userRepresentations.get(0);

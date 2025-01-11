@@ -5,6 +5,8 @@ import com.cydeo.dto.TaskDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.Role;
 import com.cydeo.entity.User;
+import com.cydeo.exception.UserAlreadyExistsException;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.KeycloakService;
@@ -52,11 +54,17 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByUserNameAndIsDeleted(username, false);
 
+        if (user == null) throw new UserNotFoundException("User does not found");
+
         return mapperUtil.convert(user, UserDTO.class);
     }
 
     @Override
     public void save(UserDTO user) {
+
+        if (userRepository.findByUserNameAndIsDeleted(user.getUserName(), false)!=null) {
+            throw new UserAlreadyExistsException("User already exists");
+        }
 
         user.setRole(roleService.findByDescription(user.getRole().getDescription()));
 
