@@ -87,12 +87,10 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByUserNameAndIsDeleted(username, false);
 
-
         if (checkIfUserCanBeDeleted(mapperUtil.convert(user, UserDTO.class))){
 
             user.setIsDeleted(true);
             user.setUserName(user.getUserName() + "-" + user.getId());
-
             keycloakService.userDelete(username);
             userRepository.save(user);
         }

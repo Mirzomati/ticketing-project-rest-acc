@@ -112,8 +112,8 @@ public class KeycloakServiceImpl implements KeycloakService {
     @Override
     public void userDelete(String userName) {
 
-        try (Keycloak keycloak = getKeycloakInstance()) {
 
+        try (Keycloak keycloak = getKeycloakInstance()) {
             RealmResource realmResource = keycloak.realm(keycloakProperties.getRealm());
             UsersResource usersResource = realmResource.users();
 
@@ -130,6 +130,8 @@ public class KeycloakServiceImpl implements KeycloakService {
         credential.setType(CredentialRepresentation.PASSWORD);
         credential.setTemporary(false);
         credential.setValue(newPassword);
+
+        usersResource.get(userId).resetPassword(credential);
     }
 
     private void updateRoles(RealmResource realmResource, String userId, String role) {
