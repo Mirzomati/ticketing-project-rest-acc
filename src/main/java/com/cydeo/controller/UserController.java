@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.annotation.ExecutionTime;
 import com.cydeo.dto.ResponseWrapper;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.service.UserService;
@@ -26,6 +27,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ExecutionTime
     @GetMapping
     @Operation(summary = "Get all users")
     @Tag(name = "User Get Methods")
@@ -72,6 +74,7 @@ public class UserController {
         return ResponseEntity.ok((new ResponseWrapper("Successfully updated user")));
 
     }
+
     @DeleteMapping("/{username}")
     @Operation(summary = "Delete user")
     public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable String username){
