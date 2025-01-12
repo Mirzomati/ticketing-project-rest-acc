@@ -20,6 +20,7 @@ public class UserDTO {
     // @NotBlank => field should not be null, "" or "  "
     // @NotEmpty => field should not be null, "" or empty collection
     // @NotNull => field should not be null
+
     @JsonIgnore
     private Long id;
 
