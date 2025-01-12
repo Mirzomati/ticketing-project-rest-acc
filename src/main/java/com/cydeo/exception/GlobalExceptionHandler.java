@@ -20,6 +20,16 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ExceptionWrapper> UserAlreadyExistsException(UserAlreadyExistsException exception) {
+
+        exception.printStackTrace();
+
+        String message = exception.getMessage();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionWrapper(message, HttpStatus.CONFLICT.value()));
+    }
+
 
 
 
