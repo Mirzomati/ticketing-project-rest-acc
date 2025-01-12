@@ -30,6 +30,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionWrapper(message, HttpStatus.CONFLICT.value()));
     }
 
+    @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
+    public ResponseEntity<ExceptionWrapper> genericException(Throwable exception) {
+
+        exception.printStackTrace();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionWrapper("An error occurred, please try again later", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    }
+
 
 
 
