@@ -14,8 +14,8 @@ public class ExceptionWrapper {
     private LocalDateTime timestamp;
     private Integer status;
     private String message;
-
-    private Integer errorCode;
+    private String path;
+    private Integer errorCount;
     private List<ValidationException> validationExceptionList;
 
     public ExceptionWrapper(String message, Integer status) {
@@ -23,4 +23,6 @@ public class ExceptionWrapper {
         this.message = message;
         this.timestamp = LocalDateTime.now();
     }
+
+
 }
