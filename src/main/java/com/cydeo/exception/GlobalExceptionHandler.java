@@ -1,6 +1,5 @@
 package com.cydeo.exception;
 
-import com.cydeo.dto.ResponseWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
